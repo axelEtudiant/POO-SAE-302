@@ -1,7 +1,20 @@
-## Module utilisé :
+# SAE 302 ROBOTO
 
+- 
 
-## TO DO LIST :
-[X] ...
-[] ....
+**INFO MODULE UTILISEE**
 
+- Flask
+- Flask_sqlalchemy
+- Flask_login
+
+## Etat du programme
+
+-
+-  
+-
+
+### TO DO
+
+- [X] ...
+- [ ] 

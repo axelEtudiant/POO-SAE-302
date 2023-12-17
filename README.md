@@ -23,3 +23,4 @@
     - [ ] Page info robot
     - [ ] Page controle robot
     - [ ] Page log/admin
+- [ ] Commencer à réfléchir sur les classes pour les contrôles du robot

@@ -33,14 +33,14 @@ if __name__=="__main__":
         print(msg_serveur)
 
         # Envoi du user
-        socket_echange.send(json.dumps({"q": f"CONN USER {input("Votre user: ")}"}).encode("utf-8"))
+        socket_echange.send(json.dumps({"q": f"CONN USER {input('Votre user: ')}"}).encode("utf-8"))
 
         # Demande du password
         msg_serveur = get_query(socket_echange.recv(1024).decode("utf-8"))
         print(msg_serveur)
 
         # Envoi du password
-        socket_echange.send(json.dumps({"q": f"CONN PASSWORD {input("Votre user: ")}"}).encode("utf-8"))
+        socket_echange.send(json.dumps({"q": f"CONN PASSWORD {input('Votre mot de passe: ')}"}).encode("utf-8"))
 
         # CONNEXION ETABLIE
         msg_serveur = get_query(socket_echange.recv(1024).decode("utf-8"))

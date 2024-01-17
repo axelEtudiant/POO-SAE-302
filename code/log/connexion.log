@@ -10,3 +10,101 @@
 [2023-12-17 22:05:39.426428] - 127.0.0.1 has initialized the connection.
 [2023-12-17 22:06:07.998560] - 127.0.0.1 has initialized the connection.
 [2023-12-17 22:06:37.423944] - 127.0.0.1 has initialized the connection.
+[2024-01-08 10:34:48.310793] - 192.168.192.112 has initialized the connection.
+[2024-01-08 10:40:09.722529] - 192.168.192.112 has initialized the connection.
+[2024-01-08 10:44:50.703212] - 192.168.192.112 has initialized the connection.
+[2024-01-10 15:05:34.922236] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:05:44.717048] - 192.168.192.45 has failed to log in with admin account.
+[2024-01-10 15:06:23.814036] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:06:27.681375] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:08:32.947661] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:08:56.024668] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:09:12.220797] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:09:15.835739] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:10:06.169209] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:10:14.501522] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:10:21.668055] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:12:29.536839] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:12:33.581361] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:12:56.885869] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:13:03.617559] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:13:37.560341] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:13:41.716490] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:16:46.387691] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:17:03.899435] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:20:03.117335] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:20:06.978904] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:20:29.990388] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:20:34.793721] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:21:26.503486] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:21:37.172245] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:21:42.174177] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:22:09.087158] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:22:12.415015] - 192.168.192.45 has log in with admin account.
+[2024-01-10 15:22:27.342770] - 192.168.192.45 has initialized the connection.
+[2024-01-10 15:22:30.983495] - 192.168.192.45 has log in with admin account.
+[2024-01-17 11:13:23.172791] - Server has initialized the port 5001.
+[2024-01-17 11:18:03.448960] - Server has initialized the port 5001.
+[2024-01-17 11:18:07.642924] - Server has initialized the port 5001.
+[2024-01-17 11:19:16.032225] - Server has initialized the port 5001.
+[2024-01-17 11:19:23.913658] - ('127.0.0.1', 63909) has initialized the connection.
+[2024-01-17 11:20:30.360982] - Server has initialized the port 5001.
+[2024-01-17 11:20:31.664053] - Server has initialized the port 5001.
+[2024-01-17 11:24:02.382253] - Server has initialized the port 5001.
+[2024-01-17 11:24:35.083828] - 127.0.0.1 has initialized the connection.
+[2024-01-17 11:24:41.673877] - 127.0.0.1 has log in with admin account.
+[2024-01-17 11:24:41.673877] - Server has initialized the port 5001.
+[2024-01-17 11:26:19.433532] - 192.168.192.112 has initialized the connection.
+[2024-01-17 11:27:00.151442] - 192.168.192.112 has log in with admin account.
+[2024-01-17 11:27:00.151442] - Server has initialized the port 5001.
+[2024-01-17 11:27:01.664187] - 127.0.0.1 has initialized the connection.
+[2024-01-17 11:27:10.061403] - 127.0.0.1 has log in with admin account.
+[2024-01-17 11:27:10.061403] - Server has initialized the port 5001.
+[2024-01-17 11:27:16.242951] - 192.168.192.112 has initialized the connection.
+[2024-01-17 11:27:18.482257] - 192.168.192.112 has failed to log in with ,cks,cls account.
+[2024-01-17 11:27:18.482257] - Server has initialized the port 5001.
+[2024-01-17 11:27:27.791863] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:34:16.181988] - Server has initialized the port 5001.
+[2024-01-17 12:34:18.500105] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:34:23.737902] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:34:23.739897] - Server has initialized the port 5001.
+[2024-01-17 12:34:58.237355] - Server has initialized the port 5001.
+[2024-01-17 12:35:04.373654] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:35:07.604613] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:35:07.605614] - Server has initialized the port 5001.
+[2024-01-17 12:35:45.779359] - Server has initialized the port 5001.
+[2024-01-17 12:35:47.708697] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:35:51.699827] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:35:51.701828] - Server has initialized the port 5001.
+[2024-01-17 12:42:56.647734] - Server has initialized the port 5001.
+[2024-01-17 12:43:01.366845] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:43:05.779345] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:43:05.780345] - Server has initialized the port 5001.
+[2024-01-17 12:43:57.687654] - Server has initialized the port 5001.
+[2024-01-17 12:44:01.080679] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:44:04.258358] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:44:04.259358] - Server has initialized the port 5001.
+[2024-01-17 12:44:26.260755] - Server has initialized the port 5001.
+[2024-01-17 12:44:29.239702] - 127.0.0.1 has initialized the connection.
+[2024-01-17 12:44:33.513059] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:44:33.515059] - Server has initialized the port 5001.
+[2024-01-17 12:53:08.635897] - Server has initialized the port 5001.
+[2024-01-17 12:53:10.952509] - 127.0.0.1 has initialized the port 30671.
+[2024-01-17 12:53:15.096980] - 127.0.0.1 has log in with admin account.
+[2024-01-17 12:53:15.098980] - Server has initialized the port 5001.
+[2024-01-17 12:53:16.715859] - 127.0.0.1 has initialized the port 30673.
+[2024-01-17 13:01:06.980500] - Server has initialized the port 5001.
+[2024-01-17 13:01:08.934604] - 127.0.0.1 has initialized the port 30858.
+[2024-01-17 13:01:12.169223] - 127.0.0.1 has log in with admin account.
+[2024-01-17 13:01:12.170224] - Server has initialized the port 5001.
+[2024-01-17 13:01:13.808207] - 127.0.0.1 has initialized the port 30861.
+[2024-01-17 13:05:46.345363] - Server has initialized the port 5001.
+[2024-01-17 13:05:48.841164] - 127.0.0.1 has initialized the port 30976.
+[2024-01-17 13:06:07.098654] - 127.0.0.1 has log in with admin account.
+[2024-01-17 13:06:07.099654] - Server has initialized the port 5001.
+[2024-01-17 13:06:23.620643] - 127.0.0.1 has initialized the port 30989.
+[2024-01-17 13:06:23.622963] - SERVER has already an authentified user. Connexion refused for 127.0.0.1.
+[2024-01-17 13:06:23.624964] - Server has initialized the port 5001.
+[2024-01-17 13:06:28.242344] - 127.0.0.1 has initialized the port 30992.
+[2024-01-17 13:06:28.245343] - SERVER has already an authentified user. Connexion refused for 127.0.0.1.
+[2024-01-17 13:06:28.246027] - Server has initialized the port 5001.

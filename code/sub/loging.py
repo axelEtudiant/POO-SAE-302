@@ -1,12 +1,10 @@
+from datetime import datetime
+import json
 """
 
 Contient toutes les classes relatives aux logs du serveur.
 
 """
-
-from datetime import datetime
-import json
-
 
 class Log:
     """Classe Log qui permet de mettre à jour les fichier de logs.

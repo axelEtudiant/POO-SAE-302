@@ -1,11 +1,10 @@
+from scapy.all import ARP, Ether, srp
+from typing import List
 """
 
 Contient toutes les classes relatives à la sécurité client/serveur.
 
 """
-from scapy.all import ARP, Ether, srp
-from typing import List
-
 
 class MacFilter:
     """Classe MacFilter pour filtrer les adresses mac qui se connectent au robot.

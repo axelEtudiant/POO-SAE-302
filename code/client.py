@@ -2,26 +2,25 @@ import socket
 import json
 
 def get_query(dict_query: dict) -> str:
+    """Fonction pour récuperer la valeur de q dans le fichier json reçu."""
     return json.loads(dict_query)["q"]
 
 if __name__=="__main__":
     # Déclaration des variables
     ip_serveur: str
-    port_serveur: int
+    port_serveur_tcp: int
     socket_echange: socket
     msg: str
     msg_serveur: str
     tab_bytes: bytes
-
     # Initialisation
-    ip_serveur = "localhost"
-    port_serveur = 5001
-
-    # Création de la socket d'échhange
+    ip_serveur = "127.0.0.1" # !!!! à change lorsque le hotspot est mis
+    port_serveur_tcp = 5001
+    # Création de la socket d'échange
     socket_echange = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Tentative de connexion au serveur
-    socket_echange.connect((ip_serveur, port_serveur))
+    socket_echange.connect((ip_serveur, port_serveur_tcp))
 
     # Filtrage MAC
     msg_serveur = get_query(socket_echange.recv(1024).decode("utf-8"))
@@ -46,4 +45,4 @@ if __name__=="__main__":
         msg_serveur = get_query(socket_echange.recv(1024).decode("utf-8"))
         print(msg_serveur)
 
-    socket_echange.close()
+        socket_echange.close()

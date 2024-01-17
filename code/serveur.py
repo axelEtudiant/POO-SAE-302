@@ -5,12 +5,51 @@ from sub.loging import Log
 from sub.requests import Requests
 from sub.exception import *
 from datetime import datetime
+from threading import Thread
+
+class ServeurEcoute:
+    def __init__(self, port_serveur: int) -> None:
+        """Constructeur de la classe ServeurEcoute
+
+        Args:
+            port_serveur (int): Port du serveur
+        """
+        self.__log: Log
+        self.__addr: str
+        self.__log = Log()
+        self.__socket_echange: socket
+        self.__socket_ecoute: socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+        self.__socket_ecoute.bind(("", port_serveur))
+        
+        self.__log.write("connexion.log", f"[{datetime.now()}] - Server has initialized the port {port_serveur}.")
+        
+    def attente(self) -> socket:
+        """Méthode de la classe ServeurEcoute qui renvoie le socket d'échange du nouveau client
+
+        Returns:
+            socket: Socket d'échange du client
+        """
+        socket_echange: socket
+        self.__socket_ecoute.listen(1)
+        self.__socket_echange, ADR = self.__socket_ecoute.accept()
+        self.__socket_ecoute.close()
+        self.__addr = ADR[0]
+        self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has initialized the port {ADR[1]}.")
+        print(f"Socket échange créé, connexion au client sur son port : {ADR[1]}")
+        return self.__socket_echange, self.__addr
+
+    def connexion_occupee(self) -> None:
+        """Méthode de la classe ServeurEcoute qui envoie un message au client lorsque quelqu'un est déjà connecté au serveur.
+        """
+        message = json.dumps({"q":"CONN OCCUPIED" }).encode("utf-8")
+        self.__socket_echange.send(message)
+        self.__log.write("connexion.log", f"[{datetime.now()}] - SERVER has already an authentified user. Connexion refused for {self.__addr}.")
 
 
-class Serveur:
+class Serveur(Thread):
     """Classe Serveur qui permet de gérer la connexion avec des machines clientes. 
     """
-    def __init__(self, port_serveur: int) -> None:
+    def __init__(self, socket_echange: socket, ADR: str) -> None:
         """Constructeur de la classe Serveur
 
         Args:
@@ -21,27 +60,27 @@ class Serveur:
         self.__mac_filter: MacFilter
         self.__bdd_connexion: Requests
 
-        self.__sock: socket
-        self.__port_serveur: int
-
-        self.__sock_ex: socket
+        self.__socket_echange: socket
         self.__login: str
         self.__password: str
         self.__addr: str
         self.__connected: bool
 
         # Initialisation
+        Thread.__init__(self)
         self.__log =  Log()
         self.__mac_filter = MacFilter()
         self.__bdd_connexion = Requests("bdd/connexion.sqlite3")
 
-        self.__port_serveur = port_serveur
+        self.__socket_echange = socket_echange
+        self.__addr = ADR
 
         self.__connected = False
 
-        # Mise en écoute du serveur
-        self.__sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
-        self.__sock.bind(("", self.__port_serveur))
+    def get_connected(self) -> None:
+        """Méthode de la classe Serveur qui permet de savoir si un utilisateur est connecté ou non.
+        """
+        return self.__connected
 
     def envoyer(self, query: str) -> None:
         """Méthode de la classe Serveur qui permet d'envoyer un message au client connecté.
@@ -50,7 +89,7 @@ class Serveur:
             query (str): message à envoyer
         """
         message = json.dumps({"q": query}).encode("utf-8")
-        self.__sock_ex.send(message)
+        self.__socket_echange.send(message)
         self.__log.write("donnees.log", f"[{datetime.now()}] - SERVER has send '{query}' to {self.__addr}.")
 
     def recevoir(self) -> str:
@@ -59,20 +98,13 @@ class Serveur:
         Returns:
             str: Message du client
         """
-        received = json.loads(self.__sock_ex.recv(1024).decode("utf-8"))["q"]
+        received = json.loads(self.__socket_echange.recv(1024).decode("utf-8"))["q"]
         self.__log.write("donnees.log", f"[{datetime.now()}] - {self.__addr} has send '{received}' to SERVER.")
         return received
     
     def authentification(self) -> None:
         """Méthode de la classe Serveur qui gère l'authentification du client connecté.
         """
-        # Ecoute sur le port 
-        self.__sock.listen(1)
-        self.__sock_ex, self.__addr = self.__sock.accept()
-        self.__addr = self.__addr[0]
-        # Log d'une tentative de connexion
-        self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has initialized the connection.")
-
         if self.__addr == "127.0.0.1" or self.__mac_filter.filter(self.__addr) is True: # Si l'adresse est autorisé alors on envoie un message de confirmation
             status_mac = f"CONN ACCEPTED MAC"
             self.envoyer(status_mac) # Envoie du message de confirmation
@@ -94,7 +126,6 @@ class Serveur:
             else: # Sinon on refuse l'authentification
                 self.envoyer(f"CONN REFUSED LOGIN")
                 self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has failed to log in with {self.__login} account.")
-                self.__connected = True
         else: # Sinon on refuse la connection
             status_mac = f"CONN REFUSED MAC"
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried to connect but his address is invalid.")
@@ -108,5 +139,28 @@ class Serveur:
         
 if __name__=="__main__":
     # Initialisation
-    server: Serveur = Serveur(5001)
-    server.main()
+    port_ecoute: int
+    serveur_ecoute: ServeurEcoute
+    socket_client: socket
+    serveur: Serveur
+    ADR: str
+    # declaration des variables
+    port_ecoute = 5001
+
+    try:
+        serveur_ecoute = ServeurEcoute(port_ecoute)
+        socket_client, ADR = serveur_ecoute.attente()
+        serveur = Serveur(socket_client, ADR)
+        serveur.start()
+        serveur.authentification()
+        while True :
+            serveur_ecoute = ServeurEcoute(port_ecoute)
+            socket_client, ADR = serveur_ecoute.attente()
+            if serveur.get_connected():
+                serveur_ecoute.connexion_occupee()
+            else:
+                serveur = Serveur(socket_client, ADR)
+                serveur.start()
+                serveur.authentification()               
+    except Exception as ex:
+        print("erreur : ", ex)

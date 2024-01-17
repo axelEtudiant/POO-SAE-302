@@ -1,12 +1,11 @@
+import sqlite3
+from typing import *
+
 """
 
 Contient toutes les classes relatives aux requêtes de base de données.
 
 """
-
-import sqlite3
-from typing import *
-
 
 class Requests:
     """Classe Requests permet la gestion des requêtes vers la base de données

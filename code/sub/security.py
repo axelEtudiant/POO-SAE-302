@@ -1,7 +1,5 @@
-# -*- coding : utf8 -*-
 from scapy.all import ARP, Ether, srp
 from typing import List
-import time
 """
 
 Contient toutes les classes relatives à la sécurité client/serveur.
@@ -40,8 +38,7 @@ class MacFilter:
         arp_request = ARP(pdst=self.__ip) # -> Préparation requête ARP
         eth_request = Ether(dst="ff:ff:ff:ff:ff:ff") # -> Préparation requête ethernet
         packet = eth_request/arp_request # -> Préparation du paquet final
-        result = srp(packet, timeout=6, verbose=0) # -> Récupération du résultat
-
+        result = srp(packet, timeout=3, verbose=0)[0] # -> Récupération du résultat
         self.__mac_address = result[0][1].hwsrc # -> Récupération de l'adresse MAC dans la trame
 
         if self.__mac_address in MacFilter.MAC_LIST: # Si l'adresse MAC du client est dans la liste autorisé alors le résultat est bon

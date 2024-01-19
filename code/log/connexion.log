@@ -157,3 +157,8 @@
 [2024-01-19 14:38:51.604725] - 127.0.0.1 has failed to log in with d account.
 [2024-01-19 14:39:01.873861] - 127.0.0.1 has initialized the port 22856.
 [2024-01-19 14:39:06.050086] - 127.0.0.1 has log in with admin account.
+[2024-01-19 15:20:17.843745] - Server has initialized the port 5001.
+[2024-01-19 15:20:53.565688] - Client 127.0.0.1 has initialized connection with SERVER to the port 60432.
+[2024-01-19 15:20:57.924888] - 127.0.0.1 has log in with user account.
+[2024-01-19 15:21:05.013948] - Client 127.0.0.1 has initialized connection with SERVER to the port 60434.
+[2024-01-19 15:21:05.013948] - SERVER has already an authentified user. Connection refused for 127.0.0.1.

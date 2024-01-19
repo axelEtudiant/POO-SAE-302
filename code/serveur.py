@@ -1,7 +1,6 @@
 # -*- coding : utf8 -*-
 import socket, json
 from typing import *
-from sub.security import MacFilter
 from sub.loging import Log
 from sub.requests import Requests
 from sub.exception import *
@@ -18,9 +17,7 @@ class ServeurEcoute:
         self.__log: Log
         self.__addr: str
         self.__addr: bool
-        self.__mac_filter: MacFilter
         self.__socket_echange: socket
-        self.__mac_filter = MacFilter()
         self.__log = Log()
         self.__socket_ecoute: socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
         self.__socket_ecoute.bind(("", port_serveur))
@@ -36,13 +33,9 @@ class ServeurEcoute:
         self.__socket_ecoute.listen(1)
         self.__socket_echange, ADR = self.__socket_ecoute.accept()
         self.__addr = ADR[0]
-        if self.__addr == "127.0.0.1" or self.__mac_filter.filter(self.__addr) is True: # Si l'adresse est autorisé alors on envoie un message de confirmation
-            self.__log.write("connexion.log", f"[{datetime.now()}] - Client {self.__addr} has initialized connection with SERVER to the port {ADR[1]}.")
-            self.connexion("accepted") # Envoie du message de confirmation
-            self.__addr_valid = True
-        else: # Sinon on refuse la connection
-            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried to connect but his address is invalid.")
-            self.__addr_valid = False
+        self.__log.write("connexion.log", f"[{datetime.now()}] - Client {self.__addr} has initialized connection with SERVER to the port {ADR[1]}.")
+        self.connexion("accepted") # Envoie du message de confirmation
+        self.__addr_valid = True
         return self.__addr_valid ,self.__socket_echange, self.__addr
 
     def connexion(self, message) -> None:

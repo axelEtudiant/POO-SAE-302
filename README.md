@@ -34,3 +34,5 @@
     - [ ] Ajouter la gestion du message "CONN OCCUPIED" coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py)
 - [ ] Ajouter la fermeture propre de la connexion tcp coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py) et [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
 - [ ] Mettre au propre la boucle while du main de [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
+- [ ] Ajout de trois tentatives
+- [ ] Ajout d'encryption des mdp

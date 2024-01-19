@@ -132,3 +132,28 @@
 [2024-01-19 09:28:55.393083] - 127.0.0.1 has initialized the port 20542.
 [2024-01-19 09:28:55.393083] - SERVER has already an authentified user. Connexion refused for 127.0.0.1.
 [2024-01-19 09:29:23.448118] - Server has initialized the port 5001.
+[2024-01-19 13:36:13.349356] - Server has initialized the port 5001.
+[2024-01-19 13:37:20.677731] - Server has initialized the port 5001.
+[2024-01-19 13:39:21.583045] - Server has initialized the port 5001.
+[2024-01-19 13:39:58.260618] - Server has initialized the port 5001.
+[2024-01-19 14:17:16.023189] - Server has initialized the port 5001.
+[2024-01-19 14:17:29.288889] - 127.0.0.1 has initialized the port 10260.
+[2024-01-19 14:17:32.986505] - 127.0.0.1 has failed to log in with plop account.
+[2024-01-19 14:18:52.888472] - Server has initialized the port 5001.
+[2024-01-19 14:19:34.244092] - 127.0.0.1 has initialized the port 10302.
+[2024-01-19 14:19:38.031448] - 127.0.0.1 has failed to log in with plop account.
+[2024-01-19 14:20:30.435048] - Server has initialized the port 5001.
+[2024-01-19 14:20:40.844100] - 127.0.0.1 has initialized the port 10325.
+[2024-01-19 14:20:44.756859] - 127.0.0.1 has failed to log in with plop account.
+[2024-01-19 14:20:48.087433] - 127.0.0.1 has failed to log in with plop account.
+[2024-01-19 14:31:38.915869] - Server has initialized the port 5001.
+[2024-01-19 14:31:48.450392] - 127.0.0.1 has initialized the port 22552.
+[2024-01-19 14:32:39.765950] - 127.0.0.1 has failed to log in with plop account.
+[2024-01-19 14:32:42.926568] - 127.0.0.1 has failed to log in with pkl account.
+[2024-01-19 14:32:45.432847] - 127.0.0.1 has failed to log in with ok account.
+[2024-01-19 14:38:48.140476] - 127.0.0.1 has initialized the port 22851.
+[2024-01-19 14:38:49.478888] - 127.0.0.1 has failed to log in with sd account.
+[2024-01-19 14:38:50.216957] - 127.0.0.1 has failed to log in with d account.
+[2024-01-19 14:38:51.604725] - 127.0.0.1 has failed to log in with d account.
+[2024-01-19 14:39:01.873861] - 127.0.0.1 has initialized the port 22856.
+[2024-01-19 14:39:06.050086] - 127.0.0.1 has log in with admin account.

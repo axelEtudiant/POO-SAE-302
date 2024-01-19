@@ -37,25 +37,30 @@ class ServeurEcoute:
         self.__socket_echange, ADR = self.__socket_ecoute.accept()
         self.__addr = ADR[0]
         if self.__addr == "127.0.0.1" or self.__mac_filter.filter(self.__addr) is True: # Si l'adresse est autorisé alors on envoie un message de confirmation
-            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has initialized the port {ADR[1]}.")
+            self.__log.write("connexion.log", f"[{datetime.now()}] - Client {self.__addr} has initialized connection with SERVER to the port {ADR[1]}.")
+            self.connexion("accepted") # Envoie du message de confirmation
             self.__addr_valid = True
         else: # Sinon on refuse la connection
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried to connect but his address is invalid.")
             self.__addr_valid = False
         return self.__addr_valid ,self.__socket_echange, self.__addr
 
-    def connexion_refusee(self, message) -> None:
+    def connexion(self, message) -> None:
         """Méthode de la classe ServeurEcoute qui envoie un message au client lorsque quelqu'un est déjà connecté au serveur ou alors son adresse est invalide.
         """
         str_message: str
-        if message == "occupee":
+        if message == "accepted":
+            query = json.dumps({"q":"CONN ACCEPTED MAC" }).encode("utf-8")
+        elif message == "occupee":
             str_message = f"[{datetime.now()}] - SERVER has already an authentified user."
             query = json.dumps({"q":"CONN OCCUPIED" }).encode("utf-8")
+            self.__log.write("connexion.log", f"{str_message} Connection refused for {self.__addr}.")
         else:
             str_message = f"[{datetime.now()}] - Invalide address."
             query = json.dumps({"q":"CONN REFUSED MAC" }).encode("utf-8")
+            self.__log.write("connexion.log", f"{str_message} Connection refused for {self.__addr}.")
+
         self.__socket_echange.send(query)
-        self.__log.write("connexion.log", f"{str_message} Connexion refused for {self.__addr}.")
 
 
 class Serveur(Thread):
@@ -70,7 +75,7 @@ class Serveur(Thread):
         # Déclaration
         self.__log: Log
         self.__bdd_connexion: Requests
-
+        self.__nb_tentatives: int
         self.__socket_echange: socket
         self.__login: str
         self.__password: str
@@ -115,8 +120,6 @@ class Serveur(Thread):
     def authentification(self) -> None:
         """Méthode de la classe Serveur qui gère l'authentification du client connecté.
         """
-        status_mac = f"CONN ACCEPTED MAC"
-        self.envoyer(status_mac) # Envoie du message de confirmation
 
         self.envoyer(f"CONN WAITING USER") # Envoie la demande d'authentification
         self.__login = self.recevoir().split()[2] # !!!!
@@ -139,9 +142,22 @@ class Serveur(Thread):
     def main(self) -> None:
         """Méthode de la classe Serveur qui permet de lancer la recherche de client si aucun n'est connecté.
         """
-        while not self.__connected:
+        self.__nb_tentatives = 0
+        while not self.__connected and self.__nb_tentatives < 3:
+            self.__nb_tentatives += 1
             self.authentification()
-        
+        if not self.__connected and self.__nb_tentatives == 3:
+            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried too many time to log in.")
+            self.quitter()
+
+    def quitter(self) -> None:
+        """Méthode de la classe Serveur qui permet de fermer la connexion actuelle.
+        """
+        self.envoyer(f"CONN QUIT")
+        self.__socket_echange.close()
+        self.__log.write("connexion.log", f"[{datetime.now()}] - SERVER has closed the connection with {self.__addr}")
+
+
 if __name__=="__main__":
     # Initialisation
     port_ecoute: int
@@ -159,15 +175,15 @@ if __name__=="__main__":
     if addr_valid:
         serveur = Serveur(socket_client, ADR)
         serveur.start()
-        serveur.authentification()
+        serveur.main()
     while True :
         addr_valid, socket_client, ADR = serveur_ecoute.attente()
         if addr_valid:    
             if (serveur is not None) and (serveur.get_connected()):
-                serveur_ecoute.connexion_refusee("occupee")
+                serveur_ecoute.connexion("occupee")
             else:
                 serveur = Serveur(socket_client, ADR)
                 serveur.start()
-                serveur.authentification()               
+                serveur.main()               
 #    except Exception as ex:
 #        print("erreur : ", ex)

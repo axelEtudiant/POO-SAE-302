@@ -78,7 +78,8 @@ class Client:
         self.__socket.send(json.dumps({"q": f"{msg}"}).encode("utf-8"))
 
     def recevoir(self) -> str:
-        return json.loads(self.__socket.recv(1024).decode("utf-8"))["q"]
+        msg = self.__socket.recv(1024).decode("utf-8")
+        return json.loads(msg)["q"]
 
 if __name__=="__main__":
     try:

@@ -34,3 +34,26 @@
     - [ ] Ajouter la gestion du message "CONN OCCUPIED" coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py)
 - [ ] Ajouter la fermeture propre de la connexion tcp coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py) et [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
 - [ ] Mettre au propre la boucle while du main de [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
+
+
+INTERFACE GRAPHIQUE :
+
+- [ ] boutons :
+    - [ ] avancer
+    - [ ] reculer
+    - [ ] tourner à droite (power sur la roue gauche)
+    - [ ] tourner à gauche (power sur la roue droite)
+    - [ ] retour arrière (rebrousse chemin)
+    - [ ] retour direct
+          
+- [ ] menu déroulant :
+    - [ ] page infos sur le robot
+    - [ ] page controle robot
+    - [ ] page log/admin si le login est correct
+     
+- [ ] cartographie :
+    - [ ] afficher la carte
+    - [ ] afficher les obstacles
+    - [ ] afficher le robot
+    - [ ] afficher le chemin parcouru 
+          

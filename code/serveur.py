@@ -38,7 +38,6 @@ class ServeurEcoute:
         self.__addr = ADR[0]
         if self.__addr == "127.0.0.1" or self.__mac_filter.filter(self.__addr) is True: # Si l'adresse est autorisé alors on envoie un message de confirmation
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has initialized the port {ADR[1]}.")
-            print(f"Socket échange créé, connexion au client sur son port : {ADR[1]}")
             self.__addr_valid = True
         else: # Sinon on refuse la connection
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried to connect but his address is invalid.")

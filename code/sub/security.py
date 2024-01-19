@@ -1,3 +1,4 @@
+# -*- coding : utf8 -*-
 from scapy.all import ARP, Ether, srp
 from typing import List
 """

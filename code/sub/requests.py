@@ -1,3 +1,4 @@
+# -*- coding : utf8 -*-
 import sqlite3
 from typing import *
 

@@ -108,3 +108,27 @@
 [2024-01-17 13:06:28.242344] - 127.0.0.1 has initialized the port 30992.
 [2024-01-17 13:06:28.245343] - SERVER has already an authentified user. Connexion refused for 127.0.0.1.
 [2024-01-17 13:06:28.246027] - Server has initialized the port 5001.
+[2024-01-19 08:34:15.350338] - Server has initialized the port 5001.
+[2024-01-19 08:40:21.656744] - 127.0.0.1 has initialized the port 9722.
+[2024-01-19 08:41:33.502172] - Server has initialized the port 5001.
+[2024-01-19 08:41:35.062821] - 127.0.0.1 has initialized the port 9756.
+[2024-01-19 08:41:40.479790] - 127.0.0.1 has log in with admin account.
+[2024-01-19 08:42:32.591514] - Server has initialized the port 5001.
+[2024-01-19 08:42:34.595824] - 127.0.0.1 has initialized the port 9782.
+[2024-01-19 08:42:38.715391] - 127.0.0.1 has log in with admin account.
+[2024-01-19 08:48:26.715912] - Server has initialized the port 5001.
+[2024-01-19 08:48:29.296624] - 127.0.0.1 has initialized the port 63696.
+[2024-01-19 08:48:33.929949] - 127.0.0.1 has log in with admin account.
+[2024-01-19 08:48:37.781069] - 127.0.0.1 has initialized the port 63699.
+[2024-01-19 08:48:37.781069] - SERVER has already an authentified user. Connexion refused for 127.0.0.1.
+[2024-01-19 08:50:15.866328] - Server has initialized the port 5001.
+[2024-01-19 08:50:24.407249] - 127.0.0.1 has initialized the port 19614.
+[2024-01-19 08:50:28.974387] - 127.0.0.1 has log in with admin account.
+[2024-01-19 09:16:00.332304] - Server has initialized the port 5001.
+[2024-01-19 09:16:11.176564] - 127.0.0.1 has initialized the port 20242.
+[2024-01-19 09:28:08.588776] - Server has initialized the port 5001.
+[2024-01-19 09:28:12.830962] - 127.0.0.1 has initialized the port 20527.
+[2024-01-19 09:28:17.737645] - 127.0.0.1 has log in with admin account.
+[2024-01-19 09:28:55.393083] - 127.0.0.1 has initialized the port 20542.
+[2024-01-19 09:28:55.393083] - SERVER has already an authentified user. Connexion refused for 127.0.0.1.
+[2024-01-19 09:29:23.448118] - Server has initialized the port 5001.

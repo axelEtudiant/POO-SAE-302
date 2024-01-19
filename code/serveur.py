@@ -1,3 +1,4 @@
+# -*- coding : utf8 -*-
 import socket, json
 from typing import *
 from sub.security import MacFilter
@@ -16,8 +17,11 @@ class ServeurEcoute:
         """
         self.__log: Log
         self.__addr: str
-        self.__log = Log()
+        self.__addr: bool
+        self.__mac_filter: MacFilter
         self.__socket_echange: socket
+        self.__mac_filter = MacFilter()
+        self.__log = Log()
         self.__socket_ecoute: socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
         self.__socket_ecoute.bind(("", port_serveur))
         
@@ -29,21 +33,30 @@ class ServeurEcoute:
         Returns:
             socket: Socket d'échange du client
         """
-        socket_echange: socket
         self.__socket_ecoute.listen(1)
         self.__socket_echange, ADR = self.__socket_ecoute.accept()
-        self.__socket_ecoute.close()
         self.__addr = ADR[0]
-        self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has initialized the port {ADR[1]}.")
-        print(f"Socket échange créé, connexion au client sur son port : {ADR[1]}")
-        return self.__socket_echange, self.__addr
+        if self.__addr == "127.0.0.1" or self.__mac_filter.filter(self.__addr) is True: # Si l'adresse est autorisé alors on envoie un message de confirmation
+            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has initialized the port {ADR[1]}.")
+            print(f"Socket échange créé, connexion au client sur son port : {ADR[1]}")
+            self.__addr_valid = True
+        else: # Sinon on refuse la connection
+            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried to connect but his address is invalid.")
+            self.__addr_valid = False
+        return self.__addr_valid ,self.__socket_echange, self.__addr
 
-    def connexion_occupee(self) -> None:
-        """Méthode de la classe ServeurEcoute qui envoie un message au client lorsque quelqu'un est déjà connecté au serveur.
+    def connexion_refusee(self, message) -> None:
+        """Méthode de la classe ServeurEcoute qui envoie un message au client lorsque quelqu'un est déjà connecté au serveur ou alors son adresse est invalide.
         """
-        message = json.dumps({"q":"CONN OCCUPIED" }).encode("utf-8")
-        self.__socket_echange.send(message)
-        self.__log.write("connexion.log", f"[{datetime.now()}] - SERVER has already an authentified user. Connexion refused for {self.__addr}.")
+        str_message: str
+        if message == "occupee":
+            str_message = f"[{datetime.now()}] - SERVER has already an authentified user."
+            query = json.dumps({"q":"CONN OCCUPIED" }).encode("utf-8")
+        else:
+            str_message = f"[{datetime.now()}] - Invalide address."
+            query = json.dumps({"q":"CONN REFUSED MAC" }).encode("utf-8")
+        self.__socket_echange.send(query)
+        self.__log.write("connexion.log", f"{str_message} Connexion refused for {self.__addr}.")
 
 
 class Serveur(Thread):
@@ -57,7 +70,6 @@ class Serveur(Thread):
         """
         # Déclaration
         self.__log: Log
-        self.__mac_filter: MacFilter
         self.__bdd_connexion: Requests
 
         self.__socket_echange: socket
@@ -69,7 +81,6 @@ class Serveur(Thread):
         # Initialisation
         Thread.__init__(self)
         self.__log =  Log()
-        self.__mac_filter = MacFilter()
         self.__bdd_connexion = Requests("bdd/connexion.sqlite3")
 
         self.__socket_echange = socket_echange
@@ -105,31 +116,26 @@ class Serveur(Thread):
     def authentification(self) -> None:
         """Méthode de la classe Serveur qui gère l'authentification du client connecté.
         """
-        if self.__addr == "127.0.0.1" or self.__mac_filter.filter(self.__addr) is True: # Si l'adresse est autorisé alors on envoie un message de confirmation
-            status_mac = f"CONN ACCEPTED MAC"
-            self.envoyer(status_mac) # Envoie du message de confirmation
+        status_mac = f"CONN ACCEPTED MAC"
+        self.envoyer(status_mac) # Envoie du message de confirmation
 
-            self.envoyer(f"CONN WAITING USER") # Envoie la demande d'authentification
-            self.__login = self.recevoir().split()[2] # !!!!
+        self.envoyer(f"CONN WAITING USER") # Envoie la demande d'authentification
+        self.__login = self.recevoir().split()[2] # !!!!
 
-            self.envoyer(f"CONN WAINTING PASSWORD") 
-            self.__password = self.recevoir().split()[2] # !!!!
+        self.envoyer(f"CONN WAINTING PASSWORD") 
+        self.__password = self.recevoir().split()[2] # !!!!
 
-            self.__bdd_connexion.open() # Ouverture de la base de données
-            liste_login = self.__bdd_connexion.reponse_multiple('SELECT login, password FROM login ;') # Requête si les identifiants correspondent
-            self.__bdd_connexion.close() # Fermeture de la base de données
+        self.__bdd_connexion.open() # Ouverture de la base de données
+        liste_login = self.__bdd_connexion.reponse_multiple('SELECT login, password FROM login ;') # Requête si les identifiants correspondent
+        self.__bdd_connexion.close() # Fermeture de la base de données
 
-            if (self.__login, self.__password) in liste_login: # Si les identifiants sont bien dans la base de données alors on accepte l'authentification
-                self.envoyer(f"CONN ACCEPTED LOGIN")
-                self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has log in with {self.__login} account.")
-                self.__connected = True
-            else: # Sinon on refuse l'authentification
-                self.envoyer(f"CONN REFUSED LOGIN")
-                self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has failed to log in with {self.__login} account.")
-        else: # Sinon on refuse la connection
-            status_mac = f"CONN REFUSED MAC"
-            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has tried to connect but his address is invalid.")
-            self.envoyer(status_mac)
+        if (self.__login, self.__password) in liste_login: # Si les identifiants sont bien dans la base de données alors on accepte l'authentification
+            self.envoyer(f"CONN ACCEPTED LOGIN")
+            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has log in with {self.__login} account.")
+            self.__connected = True
+        else: # Sinon on refuse l'authentification
+            self.envoyer(f"CONN REFUSED LOGIN")
+            self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr} has failed to log in with {self.__login} account.")
 
     def main(self) -> None:
         """Méthode de la classe Serveur qui permet de lancer la recherche de client si aucun n'est connecté.
@@ -144,23 +150,25 @@ if __name__=="__main__":
     socket_client: socket
     serveur: Serveur
     ADR: str
+    addr_valid: bool
     # declaration des variables
     port_ecoute = 5001
 
-    try:
-        serveur_ecoute = ServeurEcoute(port_ecoute)
-        socket_client, ADR = serveur_ecoute.attente()
+#    try:
+    serveur_ecoute = ServeurEcoute(port_ecoute)
+    addr_valid, socket_client, ADR = serveur_ecoute.attente()
+    if addr_valid:
         serveur = Serveur(socket_client, ADR)
         serveur.start()
         serveur.authentification()
-        while True :
-            serveur_ecoute = ServeurEcoute(port_ecoute)
-            socket_client, ADR = serveur_ecoute.attente()
-            if serveur.get_connected():
-                serveur_ecoute.connexion_occupee()
+    while True :
+        addr_valid, socket_client, ADR = serveur_ecoute.attente()
+        if addr_valid:    
+            if (serveur is not None) and (serveur.get_connected()):
+                serveur_ecoute.connexion_refusee("occupee")
             else:
                 serveur = Serveur(socket_client, ADR)
                 serveur.start()
                 serveur.authentification()               
-    except Exception as ex:
-        print("erreur : ", ex)
+#    except Exception as ex:
+#        print("erreur : ", ex)

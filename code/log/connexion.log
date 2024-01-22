@@ -162,3 +162,8 @@
 [2024-01-19 15:20:57.924888] - 127.0.0.1 has log in with user account.
 [2024-01-19 15:21:05.013948] - Client 127.0.0.1 has initialized connection with SERVER to the port 60434.
 [2024-01-19 15:21:05.013948] - SERVER has already an authentified user. Connection refused for 127.0.0.1.
+[2024-01-19 15:22:48.083391] - Server has initialized the port 5001.
+[2024-01-19 15:24:37.630760] - Client 127.0.0.1 has initialized connection with SERVER to the port 60478.
+[2024-01-19 15:24:41.138618] - 127.0.0.1 has log in with user account.
+[2024-01-19 15:24:43.251630] - Client 127.0.0.1 has initialized connection with SERVER to the port 60479.
+[2024-01-19 15:24:43.251630] - SERVER has already an authentified user. Connection refused for 127.0.0.1.

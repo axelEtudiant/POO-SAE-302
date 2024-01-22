@@ -171,12 +171,12 @@ if __name__=="__main__":
         serveur.main()
     while True :
         addr_valid, socket_client, ADR = serveur_ecoute.attente()
-        if addr_valid:    
+        if addr_valid:
             if (serveur is not None) and (serveur.get_connected()):
                 serveur_ecoute.connexion("occupee")
             else:
                 serveur = Serveur(socket_client, ADR)
                 serveur.start()
-                serveur.main()               
+                serveur.main()
 #    except Exception as ex:
 #        print("erreur : ", ex)

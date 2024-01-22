@@ -61,9 +61,6 @@ class Client:
                 if msg_serveur.split()[1].lower() == "accepted":
                     self.__authentification_ok = True
 
-                if msg_serveur.split()[1].lower() == "quit":
-                    nb_tentatives = 3
-                    self.quitter()
                 nb_tentatives += 1
 
     def mouvement(self, mvmt: str):

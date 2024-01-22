@@ -167,3 +167,17 @@
 [2024-01-19 15:24:41.138618] - 127.0.0.1 has log in with user account.
 [2024-01-19 15:24:43.251630] - Client 127.0.0.1 has initialized connection with SERVER to the port 60479.
 [2024-01-19 15:24:43.251630] - SERVER has already an authentified user. Connection refused for 127.0.0.1.
+[2024-01-22 15:14:42.230550] - Server has initialized the port 5001.
+[2024-01-22 15:14:53.364866] - 127.0.0.1 has initialized the port 50943.
+[2024-01-22 15:15:48.129559] - Server has initialized the port 5001.
+[2024-01-22 15:15:49.488514] - 127.0.0.1 has initialized the port 50946.
+[2024-01-22 15:16:12.811562] - Server has initialized the port 5001.
+[2024-01-22 15:16:14.229020] - 127.0.0.1 has initialized the port 50947.
+[2024-01-22 15:16:48.151332] - Server has i   nitialized the port 5001.
+[2024-01-22 15:16:49.337169] - 127.0.0.1 has initialized the port 50949.
+[2024-01-22 15:16:56.203043] - Server has i   nitialized the port 5001.
+[2024-01-22 15:17:31.906535] - Server has initialized the port 5001.
+[2024-01-22 15:17:35.489694] - 127.0.0.1 has initialized the port 50951.
+[2024-01-22 15:18:14.264679] - Server has initialized the port 5001.
+[2024-01-22 15:18:16.410687] - 127.0.0.1 has initialized the port 50953.
+[2024-01-22 15:18:19.411242] - 127.0.0.1 has log in with user account.

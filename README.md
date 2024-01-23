@@ -5,6 +5,8 @@
 **INFO MODULE COMPLEMENTAIRE (hors module déjà présent avec python)**
 
 - Scapy
+- Kivy
+- Maskpass [ligne ~50 du fichier client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py)
 
 
 ## Etat du programme
@@ -33,6 +35,6 @@
     - [X] Déplacer le filtrage d'adresse M@C dans la classe [ServeurEcoute](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
     - [ ] Ajouter la gestion du message "CONN OCCUPIED" coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py)
 - [ ] Ajouter la fermeture propre de la connexion tcp coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py) et [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
-- [ ] Mettre au propre la boucle while du main de [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
-- [ ] Ajout de trois tentatives de connexion
-- [ ] Ajout d'encryption des mdp
+- [X] Mettre au propre la boucle while du main de [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
+- [X] Ajout de trois tentatives de connexion
+- [X] Ajout d'encryption des mdp

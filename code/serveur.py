@@ -1,3 +1,4 @@
+# -*- coding : utf8 -*-
 import socket, json
 from typing import *
 from sub.security import MacFilter
@@ -7,10 +8,15 @@ from sub.exception import *
 from datetime import datetime
 from threading import Thread
 
+
 class Serveur:
     # -- CONSTRUCTEUR
     def __init__(self, port_serveur: int) -> None:
-        """"""
+        """Constructeur de la classe Serveur.
+        
+        Args:
+            port_serveur (int): Port sur lequel le serveur écoute.
+        """
         # Déclaration
         self.__port_serveur: int
         self.__log: Log
@@ -36,10 +42,18 @@ class Serveur:
     # -- OBSERVATEUR
     def get_connected(self) -> bool:
         """Méthode de la classe Serveur qui permet de savoir si un utilisateur est connecté ou non.
+        
+        Returns:
+            bool: Statut de la connexion
         """
         return self.__connected
     
     def get_authentificated(self) -> bool:
+        """Méthode de la classe Serveur qui renvoie le statut de l'authentification.
+
+        Returns:
+            bool: Statut de l'authentification
+        """
         return self.__authentificated
 
     # -- MODIFICATEURS
@@ -65,17 +79,17 @@ class Serveur:
         self.__log.write("donnees.log", f"[{datetime.now()}] - {self.__addr_client} has send '{received}' to SERVER.")
         return received
     
-    def connexion_occupee(self) -> None:
-        self.envoyer(f"CONN OCCUPIED")
-    
     # - ECOUTE
-    def ecoute(self, port_serveur: int) -> None:
+    def ecoute(self) -> None:
+        """Méthode de la classe Serveur qui écoute sur le port du serveur, toutes nouvelles tentatives de connexions.
+        """
         self.__socket_ecoute: socket
         self.__socket_ecoute = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
-        self.__socket_ecoute.bind(("", port_serveur))
+        self.__socket_ecoute.bind(("", self.__port_serveur))
         self.__log.write("connexion.log", f"[{datetime.now()}] - Server has initialized the port {self.__port_serveur}.")
 
     def attente_client(self) -> None:
+        """Méthode de la classe Serveur qui attend la connexion du client sur l'échange TCP avec le serveur."""
         self.__socket_ecoute.listen(1)
         self.__socket_echange, addr = self.__socket_ecoute.accept()
         self.__addr_client = addr[0]
@@ -92,10 +106,10 @@ class Serveur:
             self.envoyer(status_mac) # Envoie du message de confirmation
 
             self.envoyer(f"CONN WAITING USER") # Envoie la demande d'authentification
-            self.__login = self.recevoir().split()[2] # !!!!
+            self.__login = self.recevoir().split()[2]
 
-            self.envoyer(f"CONN WAINTING PASSWORD") 
-            self.__password = self.recevoir().split()[2] # !!!!
+            self.envoyer(f"CONN WAINTING PASSWORD")
+            self.__password = self.recevoir().split()[2]
 
             self.__bdd_connexion.open() # Ouverture de la base de données
             liste_login = self.__bdd_connexion.reponse_multiple('SELECT login, password FROM login ;') # Requête si les identifiants correspondent
@@ -115,7 +129,9 @@ class Serveur:
 
     # - MAIN
     def main(self) -> None:
-        self.ecoute(self.__port_serveur)
+        """Méthode de la classe qui permet de lancer l'écoute sur le port ainsi que l'authentification en cas de connexion
+        """
+        self.ecoute()
         while True:
             self.attente_client()
             while not self.get_authentificated():

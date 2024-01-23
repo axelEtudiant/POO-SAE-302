@@ -1,9 +1,5 @@
 # -*- coding : utf8 -*-
-
-import socket
-import json
-import sys
-
+import socket, json, sys, maskpass, hashlib
 
 class Client:
     def __init__(self, ip_serveur: str, port_serveur: int) -> None:
@@ -51,7 +47,8 @@ class Client:
                 print(msg_serveur)
 
                 # Envoi du password
-                self.envoyer(f"CONN PASSWORD {input('Votre mot de passe: ')}")
+                password = hashlib.sha256((maskpass.askpass(prompt='Votre mot de passe: ', mask='*')).encode("utf-8")).hexdigest()
+                self.envoyer(f"CONN PASSWORD {password}")
 
                 # Demande d'acceptation
                 msg_serveur = self.recevoir()

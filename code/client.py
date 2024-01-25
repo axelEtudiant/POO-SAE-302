@@ -1,5 +1,6 @@
 # -*- coding : utf8 -*-
 import socket, json, sys, maskpass, hashlib
+from sub.joystick import Joystick
 
 class Client:
     def __init__(self, ip_serveur: str, port_serveur: int) -> None:
@@ -13,11 +14,13 @@ class Client:
         self.__socket: socket
         self.__connexion_ok: bool
         self.__authentification_ok: bool
+        self.__joystick: Joystick
 
         self.__ip_serveur = ip_serveur
         self.__port_serveur = port_serveur
         self.__connexion_ok = False
         self.__authentification_ok = False
+        self.__joystick = Joystick()
 
     def connexion(self) -> None:
         """Initialise la connexion au serveur
@@ -69,6 +72,13 @@ class Client:
     def main(self) -> None:
         self.connexion()
         self.authentification()
+        if self.__joystick.is_connected():
+            try:
+                self.__joystick.mainloop()
+            except KeyboardInterrupt as e:
+                print(e)
+            finally:
+                self.__joystick.quit()
         self.quitter()
 
     def envoyer(self, msg: str) -> None:

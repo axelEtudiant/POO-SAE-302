@@ -5,6 +5,7 @@ from sub.security import MacFilter
 from sub.loging import Log
 from sub.requests import Requests
 from sub.exception import *
+from sub.commandes import Commandes
 from datetime import datetime
 from threading import Thread
 
@@ -29,6 +30,7 @@ class Serveur:
         self.__connected: bool
         self.__socket_ecoute: socket
         self.__socket_echange: socket
+        self.__commandes: Commandes
 
         # Initialisation
         Thread.__init__(self)
@@ -38,6 +40,7 @@ class Serveur:
         self.__bdd_connexion = Requests("bdd/connexion.sqlite3")
         self.__connected = False
         self.__authentificated = False
+        self.__commandes = Commandes
 
     # -- OBSERVATEUR
     def get_connected(self) -> bool:
@@ -126,18 +129,54 @@ class Serveur:
             status_mac = f"CONN REFUSED MAC"
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr_client} has tried to connect but his address is invalid.")
             self.envoyer(status_mac)
+    
+    def mouvement(self, angle: float) -> None:
+        """Méthode de la classe Serveur qui effectue le mouvement du robot en fonction de la commande reçu.
 
+        Args:
+            angle (float): Angle du joystick
+        """
+        if angle > 180:
+            angle -= 360
+        if (angle < 45 and angle > -45): # Avancer
+            self.__commandes.mouvement("avancer", 1, 80)
+        elif (angle < -45 and angle > -135):
+            self.__commandes.tourner(angle, 80)
+        elif (angle < -135 or angle > 135):
+            self.__commandes.mouvement("reculer", 1, 80)
+        elif (angle < 135 and angle > 45):
+            self.__commandes.tourner(angle, 80)
+
+
+    def arret(self) -> None:
+        """Méthode de la classe Serveur qui permet de fermer la connexion avec le client.
+        """
+        self.__socket_echange.close()
+        
     # - MAIN
     def main(self) -> None:
-        """Méthode de la classe qui permet de lancer l'écoute sur le port ainsi que l'authentification en cas de connexion
+        """Méthode de la classe Serveur qui permet de lancer l'écoute sur le port ainsi que l'authentification en cas de connexion
         """
+        message_client: List[str] = []
         self.ecoute()
         while True:
+            cpt: int = 0
             self.attente_client()
-            while not self.get_authentificated():
+            while not self.get_authentificated() and cpt < 3:
                 while not self.get_connected():
                     self.attente_client()
                 self.authentification()
+                cpt += 1
+            while message_client[0] != "QUIT":
+                message_client = self.recevoir().split()
+                if message_client[0] == "MVMT":
+                    while message_client[1] == 1:
+                        self.mouvement(message_client[2])
+                        message_client = message_client.split()
+
+                
+                
+        
 
 if __name__ == "__main__":
     serveur: Serveur = Serveur(5001)

@@ -37,4 +37,4 @@
 - [ ] Ajouter la fermeture propre de la connexion tcp coté [client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py) et [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
 - [X] Mettre au propre la boucle while du main de [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
 - [X] Ajout de trois tentatives de connexion
-- [X] Ajout d'encryption des mdp
+- [X] Ajout du chiffrage des mdp

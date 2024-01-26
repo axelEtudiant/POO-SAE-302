@@ -20,7 +20,7 @@ class Client:
         self.__port_serveur = port_serveur
         self.__connexion_ok = False
         self.__authentification_ok = False
-        self.__joystick = Joystick()
+        #self.__joystick = Joystick()
 
     def connexion(self) -> None:
         """Initialise la connexion au serveur
@@ -67,6 +67,7 @@ class Client:
         self.envoyer(f"MVMT {mvmt} 1")
 
     def quitter(self) -> None:
+        self.envoyer("QUIT")
         self.__socket.close()
 
     def main(self) -> None:

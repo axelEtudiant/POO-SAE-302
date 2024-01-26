@@ -1,4 +1,5 @@
-import pygame, math
+import pygame, math, json
+import socket
 
 class Joystick:
     def __init__(self) -> None:
@@ -6,6 +7,7 @@ class Joystick:
         self.__boutons_old: dict
         self.__connected: bool
         self.__joystick_name: str
+        self.__socket: socket
 
         self.__boutons = {}
         self.__boutons_old = {}
@@ -56,20 +58,28 @@ class Joystick:
                         angle_deg = ""
                     
                     msg = f"MVMT {val} {angle_deg}"
-                    print(msg)
         
         self.__boutons_old = self.__boutons
         self.__boutons = {}
 
+        
         return msg
+    
+    def envoyer(self, msg: str) -> None:
+        self.__socket.send(json.dumps({"q": f"{msg}"}).encode("utf-8"))
+
+    def recevoir(self) -> str:
+        msg = self.__socket.recv(1024).decode("utf-8")
+        return json.loads(msg)["q"]
 
     def quit(self) -> None:
         self.__joystick.quit()
         pygame.quit()
 
-    def mainloop(self) -> None:
+    def mainloop(self, socket: socket) -> None:
+        self.__socket = socket
         while self.__boutons_old.get("Bouton1") != "1":
             button = self.get_buttons()
             if button != "":
-                print(button)
-        print("Le client quitte.")
+                self.envoyer(button)                
+        self.envoyer("QUIT")

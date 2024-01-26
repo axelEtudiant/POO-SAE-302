@@ -9,7 +9,6 @@ from sub.commandes import Commandes
 from datetime import datetime
 from threading import Thread
 
-
 class Serveur:
     # -- CONSTRUCTEUR
     def __init__(self, port_serveur: int) -> None:
@@ -40,7 +39,7 @@ class Serveur:
         self.__bdd_connexion = Requests("bdd/connexion.sqlite3")
         self.__connected = False
         self.__authentificated = False
-        self.__commandes = Commandes
+        self.__commandes = Commandes()
 
     # -- OBSERVATEUR
     def get_connected(self) -> bool:
@@ -78,7 +77,9 @@ class Serveur:
         Returns:
             str: Message du client
         """
-        received = json.loads(self.__socket_echange.recv(1024).decode("utf-8"))["q"]
+        msg = self.__socket_echange.recv(1024).decode("utf-8")
+        print(msg)
+        received = json.loads(msg)["q"]
         self.__log.write("donnees.log", f"[{datetime.now()}] - {self.__addr_client} has send '{received}' to SERVER.")
         return received
     
@@ -104,7 +105,7 @@ class Serveur:
     def authentification(self) -> None:
         """Méthode de la classe Serveur qui gère l'authentification du client connecté.
         """
-        if self.__addr_client == "127.0.0.1" or True: # Si l'adresse est autorisé alors on envoie un message de confirmation
+        if self.__addr_client == "127.0.0.1" or self.__mac_filter.filter(self.__addr_client): # Si l'adresse est autorisé alors on envoie un message de confirmation
             status_mac = f"CONN ACCEPTED MAC"
             self.envoyer(status_mac) # Envoie du message de confirmation
 
@@ -140,19 +141,14 @@ class Serveur:
             angle -= 360
         if (angle < 45 and angle > -45): # Avancer
             self.__commandes.mouvement("avancer", 1, 80)
-        elif (angle < -45 and angle > -135):
+        elif (angle < -45 and angle > -135): # Gauche
             self.__commandes.tourner(angle, 80)
-        elif (angle < -135 or angle > 135):
+        elif (angle < -135 or angle > 135): # Reculer
             self.__commandes.mouvement("reculer", 1, 80)
-        elif (angle < 135 and angle > 45):
+        elif (angle < 135 and angle > 45): # Droite
             self.__commandes.tourner(angle, 80)
 
-
-    def arret(self) -> None:
-        """Méthode de la classe Serveur qui permet de fermer la connexion avec le client.
-        """
-        self.__socket_echange.close()
-        
+       
     # - MAIN
     def main(self) -> None:
         """Méthode de la classe Serveur qui permet de lancer l'écoute sur le port ainsi que l'authentification en cas de connexion
@@ -167,16 +163,14 @@ class Serveur:
                     self.attente_client()
                 self.authentification()
                 cpt += 1
+            message_client = self.recevoir().split()
             while message_client[0] != "QUIT":
                 message_client = self.recevoir().split()
                 if message_client[0] == "MVMT":
-                    while message_client[1] == 1:
-                        self.mouvement(message_client[2])
-                        message_client = message_client.split()
+                    while int(message_client[1]) == 1:
+                        self.mouvement(float(message_client[2]))
+                        message_client = self.recevoir().split()
 
-                
-                
-        
 
 if __name__ == "__main__":
     serveur: Serveur = Serveur(5001)

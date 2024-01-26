@@ -75,7 +75,7 @@ class Client:
         self.authentification()
         if self.__joystick.is_connected():
             try:
-                self.__joystick.mainloop()
+                self.__joystick.mainloop(self.__socket)
             except KeyboardInterrupt as e:
                 print(e)
             finally:

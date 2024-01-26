@@ -8,7 +8,6 @@ from sub.exception import *
 from datetime import datetime
 from threading import Thread
 
-
 class Serveur:
     # -- CONSTRUCTEUR
     def __init__(self, port_serveur: int) -> None:
@@ -75,7 +74,9 @@ class Serveur:
         Returns:
             str: Message du client
         """
-        received = json.loads(self.__socket_echange.recv(1024).decode("utf-8"))["q"]
+        msg = self.__socket_echange.recv(1024).decode("utf-8")
+        print(msg)
+        received = json.loads(msg)["q"]
         self.__log.write("donnees.log", f"[{datetime.now()}] - {self.__addr_client} has send '{received}' to SERVER.")
         return received
     
@@ -101,7 +102,7 @@ class Serveur:
     def authentification(self) -> None:
         """Méthode de la classe Serveur qui gère l'authentification du client connecté.
         """
-        if self.__addr_client == "127.0.0.1" or True: # Si l'adresse est autorisé alors on envoie un message de confirmation
+        if self.__addr_client == "127.0.0.1" or self.__mac_filter.filter(self.__addr_client): # Si l'adresse est autorisé alors on envoie un message de confirmation
             status_mac = f"CONN ACCEPTED MAC"
             self.envoyer(status_mac) # Envoie du message de confirmation
 
@@ -138,6 +139,8 @@ class Serveur:
                 while not self.get_connected():
                     self.attente_client()
                 self.authentification()
+                while True:
+                    print(self.recevoir())
 
 if __name__ == "__main__":
     serveur: Serveur = Serveur(5001)

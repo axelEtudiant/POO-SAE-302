@@ -24,6 +24,15 @@ class Client:
         self.__authentification_ok = False
         self.__joystick = Joystick()
 
+    def get_connexion_ok(self) -> bool:
+        return self.__connexion_ok
+
+    def get_authentification_ok(self) -> bool:
+        return self.__authentification_ok
+
+    def get_joystick(self) -> Joystick:
+        return self.__joystick
+
     def connexion(self) -> None:
         """Méthode de la classe Client qui initialise le socket
         """
@@ -35,30 +44,25 @@ class Client:
         if msg_serveur.split()[1].lower() == "accepted": # Mac
             self.__connexion_ok = True
 
-    def authentification(self) -> None:
+    def authentification(self, login: str, passwd: str) -> str:
+        msg_serveur = self.recevoir()
         """Méthode de la classe Client qui permet à l'utilisateur de s'authentifier
         """
         if self.__connexion_ok:
-            msg_serveur: str = "a a"
-            nb_tentatives: int= 0
-            while str(msg_serveur).split()[1].lower() != "accepted" and nb_tentatives < 3:
-                # Demande du user
-                msg_serveur = self.recevoir()
-                print(msg_serveur)
+            msg_serveur = "a a"
+            self.envoyer(f"CONN LOGIN {login} {passwd}")
+            msg_serveur = self.recevoir()
+            if msg_serveur.split()[1].lower() == "accepted":
+                self.__authentification_ok = True
+            return msg_serveur
 
-                # Envoi du login & password
-                login: str = input('Votre login : ')
-                password: bytes = hashlib.sha256((maskpass.askpass(prompt='Votre mot de passe : ', mask='*')).encode("utf-8")).hexdigest()
-                self.envoyer(f"CONN LOGIN {login} {password}")
-
-                # Réponse du serveur
-                msg_serveur = self.recevoir()
-                print(msg_serveur)
-
-                # Si la connexion est acceptée
-                if msg_serveur.split()[1].lower() == "accepted":
-                    self.__authentification_ok = True
-                nb_tentatives += 1
+    def authentification_interactive(self) -> None:
+        nb_tentatives: int = 0
+        while not self.__authentification_ok and nb_tentatives < 3:
+            login = input('Votre login: ')
+            passwd = hashlib.sha256((maskpass.askpass(prompt='Votre mot de passe: ', mask='*')).encode("utf-8")).hexdigest()
+            self.authentification(login=login, passwd=passwd)
+            nb_tentatives += 1
 
     def mouvement(self, mvmt: str):
         """Méthode de la classe Client qui permet d'envoyer au serveur les boutons activés sur la manette."""
@@ -74,7 +78,7 @@ class Client:
         """Méthode de la classe Client qui permet de lancer l'authentification et l'envoie des contrôles.
         """
         self.connexion()
-        self.authentification()
+        self.authentification_interactive()
         if self.__joystick.is_connected():
             try:
                 self.__joystick.mainloop(self.__socket)

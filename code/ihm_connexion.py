@@ -13,11 +13,7 @@ class Connexion(Tk):
     TAILLE_POLICE: int = 12
 
     def __init__(self) -> None:
-        self.__ip_serveur: str
-        self.__port_serveur: int
-        self.__client: Client
-
-        Tk.__init__(self, screenName="Connexion")
+        Tk.__init__(self)
         self.__fen_connexion: Frame
         self.__lbl_err: Label
         self.__lbl_ip_serveur: Label
@@ -47,17 +43,21 @@ class Connexion(Tk):
         self.__btn_connexion.grid(row=3, column=1)
         self.__btn_quitter.grid(row=3, column=2)
 
+        self.__ip_serveur: str
+        self.__port_serveur: int
+        self.__client: Client
+
     def get_client(self) -> Client:
         return self.__client
 
     def connexion(self):
         try:
             erreur: bool = False
-            ip_serveur = self.__entree_ip_serveur.get()
-            port_serveur = self.__entree_port_serveur.get()
-            if len(ip_serveur.split(".")) != 4:
+            self.__ip_serveur = self.__entree_ip_serveur.get()
+            self.__port_serveur = self.__entree_port_serveur.get()
+            if len(self.__ip_serveur.split(".")) != 4:
                 raise ErrIP
-            if not port_serveur.isdigit():
+            if not self.__port_serveur.isdigit():
                 raise ErrPORT
         except ErrIP as e:
             erreur = True
@@ -76,9 +76,10 @@ class Connexion(Tk):
                 self.__lbl_err.configure(text=text, background=color)
                 self.__lbl_err.grid(row=0, column=1)
             else:
-                self.__client = Client(ip_serveur=ip_serveur, port_serveur=port_serveur)
+                self.__port_serveur = int(self.__port_serveur)
+                self.__client = Client(ip_serveur=self.__ip_serveur, port_serveur=self.__port_serveur)
                 self.__client.connexion()
-    
+
 if __name__=="__main__":
     ihm: Connexion
     ihm = Connexion()

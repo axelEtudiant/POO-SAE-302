@@ -62,7 +62,6 @@ class Joystick:
         self.__boutons_old = self.__boutons
         self.__boutons = {}
 
-        
         return msg
     
     def envoyer(self, msg: str, socket: socket) -> None:
@@ -82,4 +81,4 @@ class Joystick:
             if button != "":
                 print(button)
                 self.envoyer(button, socket)                
-        self.envoyer("QIUT")
+        self.envoyer("QIUT", socket)

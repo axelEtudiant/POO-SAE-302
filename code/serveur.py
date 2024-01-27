@@ -74,10 +74,12 @@ class Serveur:
         Returns:
             str: Message du client
         """
-        msg = self.__socket_echange.recv(1024).decode("utf-8")
-        print(msg)
-        received = json.loads(msg)["q"]
-        self.__log.write("donnees.log", f"[{datetime.now()}] - {self.__addr_client} has send '{received}' to SERVER.")
+        try:
+            msg = self.__socket_echange.recv(1024).decode("utf-8")
+            received = json.loads(msg)["q"]
+            self.__log.write("donnees.log", f"[{datetime.now()}] - {self.__addr_client} has send '{received}' to SERVER.")
+        except json.decoder.JSONDecodeError as e:
+            received = ""
         return received
     
     # - ECOUTE
@@ -128,6 +130,11 @@ class Serveur:
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr_client} has tried to connect but his address is invalid.")
             self.envoyer(status_mac)
 
+    def drop_client(self) -> None:
+        self.__socket_echange = None
+        self.__connected = False
+        self.__authentificated = False
+
     # - MAIN
     def main(self) -> None:
         """Méthode de la classe qui permet de lancer l'écoute sur le port ainsi que l'authentification en cas de connexion
@@ -139,8 +146,11 @@ class Serveur:
                 while not self.get_connected():
                     self.attente_client()
                 self.authentification()
-                while True:
-                    print(self.recevoir())
+                msg = "."
+                while msg != "":
+                    msg = self.recevoir()
+                self.drop_client()
+                                   
 
 if __name__ == "__main__":
     serveur: Serveur = Serveur(5001)

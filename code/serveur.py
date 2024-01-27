@@ -157,8 +157,6 @@ class Serveur:
         try:
             self.ecoute()
             while True:
-                self.__connected = False
-                self.__authentificated = False
                 cpt: int = 0
                 self.attente_client()
                 while not self.get_authentificated() and cpt < 3:
@@ -178,6 +176,8 @@ class Serveur:
                             message_client = self.recevoir().split()
                         """
                         self.__commandes.control_joystick(float(message_client[2]), float(message_client[3]))
+                self.drop_client()
+                
         except KeyboardInterrupt as err:
             print(err)
             self.__commandes.clean()

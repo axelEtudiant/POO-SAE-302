@@ -45,9 +45,16 @@ class Client:
             self.__connexion_ok = True
 
     def authentification(self, login: str, passwd: str) -> str:
-        msg_serveur = self.recevoir()
-        """Méthode de la classe Client qui permet à l'utilisateur de s'authentifier
+        """Méthode de la classe Client qui permet à l'utilisateur de s'authentifier.
+
+        Args:
+            login (str): Login de l'utilisateur
+            passwd (str): passwd de l'utilisateur
+
+        Return: 
+            str: La réponse du serveur 
         """
+        msg_serveur = self.recevoir()
         if self.__connexion_ok:
             msg_serveur = "a a"
             self.envoyer(f"CONN LOGIN {login} {passwd}")
@@ -57,16 +64,14 @@ class Client:
             return msg_serveur
 
     def authentification_interactive(self) -> None:
+        """Méthode de la classe Client qui permet de récupérer les identifiants de l'utilisateur
+        """
         nb_tentatives: int = 0
         while not self.__authentification_ok and nb_tentatives < 3:
             login = input('Votre login: ')
             passwd = hashlib.sha256((maskpass.askpass(prompt='Votre mot de passe: ', mask='*')).encode("utf-8")).hexdigest()
             self.authentification(login=login, passwd=passwd)
             nb_tentatives += 1
-
-    def mouvement(self, mvmt: str):
-        """Méthode de la classe Client qui permet d'envoyer au serveur les boutons activés sur la manette."""
-        self.envoyer(f"MVMT {mvmt} 1")
 
     def quitter(self) -> None:
         """Méthode de la classe Client qui permet de fermer le client.

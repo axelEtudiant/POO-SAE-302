@@ -130,7 +130,7 @@ class Authentification(Tk):
         self.__lbl_login = Label(self.__fen_authentification, text="Login :", borderwidth=5, relief="ridge", padx=5, pady=5)
         self.__entree_login = Entry(self.__fen_authentification, width=30)
         self.__lbl_mdp = Label(self.__fen_authentification, text="Mot de passe :", borderwidth=5, relief="ridge", padx=5, pady=5)
-        self.__entree_mdp = Entry(self.__fen_authentification, width=30)
+        self.__entree_mdp = Entry(self.__fen_authentification, width=30, show='*')
         self.__btn_authentification = Button(self.__fen_authentification, text="Authentification", font=(Main_IHM.POLICE,Main_IHM.TAILLE_POLICE), bg="grey", command=self.authentification)
         self.__btn_quitter = Button(self.__fen_authentification, text = "Quitter", font= (Main_IHM.POLICE,Main_IHM.TAILLE_POLICE), bg="red", command=self.destroy)
 

@@ -18,8 +18,6 @@ class Joystick:
         joystick_count = pygame.joystick.get_count()
         if joystick_count == 0:
             self.__connected = False
-            print("Err: Aucune manette de connectée.")
-            quit()
         else:
             self.__joystick = pygame.joystick.Joystick(0)
             self.__joystick.init()

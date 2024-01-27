@@ -18,6 +18,13 @@ class ErrPORT(Exception):
     def __str__(self) -> str:
         return "Le port doit être un entier."
     
+class ErrJOYSTICK(Exception):
+    def __init__(self) -> None:
+        Exception.__init__(self)
+
+    def __str__(self) -> str:
+        return "Veuillez connecter une manette."
+
 class ErrEMPTY(Exception):
     def __init__(self) -> None:
         Exception.__init__(self)

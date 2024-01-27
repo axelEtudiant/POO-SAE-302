@@ -4,16 +4,18 @@
 
 **INFO MODULE COMPLEMENTAIRE (hors module déjà présent avec python)**
 
-- Scapy
 - Kivy
 - Maskpass [ligne ~50 du fichier client.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/client.py)
+- Pygame
+- getmac
+- RPI.GPIO
 
 
 ## Etat du programme
 
 - Connection avec identification pour un client
 - Gestion des logs et utilisateurs
--
+- Controle du robot avec une manette
 
 ### TO DO
 
@@ -38,3 +40,6 @@
 - [X] Mettre au propre la boucle while du main de [serveur.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/serveur.py)
 - [X] Ajout de trois tentatives de connexion
 - [X] Ajout du chiffrage des mdp
+- [X] Problème lors d'une deuxième authentification. Rien ne se passe coté client.
+- [X] Lors de l'utilisation de la manette au bout d'un moment le serveur crash (je suppose il recoit trop de message en même temps)
+- [ ] Lorsque les commandes par IHM sont posées, mettre au propre les fonctions de mouvement dans [commandes.py](https://github.com/SpiizN/POO-SAE-302/tree/main/code/sub/commandes.py)

@@ -4,36 +4,40 @@ from sub.joystick import Joystick
 
 class Client:
     def __init__(self, ip_serveur: str, port_serveur: int) -> None:
-        """Méthode constructeur de la classe client.
-        Params:
+        """Méthode constructeur de la classe Client.
+        
+        Args:
             ip_serveur: str -> L'IP du serveur.
             port_serveur: int -> Le port d'écoute du serveur.
         """
+        # Déclaration
         self.__ip_serveur: str
         self.__port_serveur: int
         self.__socket: socket
         self.__connexion_ok: bool
         self.__authentification_ok: bool
         self.__joystick: Joystick
-
+        # Initialisation
         self.__ip_serveur = ip_serveur
         self.__port_serveur = port_serveur
         self.__connexion_ok = False
         self.__authentification_ok = False
-        #self.__joystick = Joystick()
+        self.__joystick = Joystick()
 
     def connexion(self) -> None:
-        """Initialise la connexion au serveur
+        """Méthode de la classe Client qui initialise le socket
         """
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Création de la socket
         self.__socket.connect((self.__ip_serveur, self.__port_serveur)) # Connection au service distant
         # Filtrage MAC
         msg_serveur = self.recevoir()
         print(msg_serveur)
-        if msg_serveur.split()[1].lower() == "accepted":
+        if msg_serveur.split()[1].lower() == "accepted": # Mac
             self.__connexion_ok = True
 
     def authentification(self) -> None:
+        """Méthode de la classe Client qui permet à l'utilisateur de s'authentifier
+        """
         if self.__connexion_ok:
             msg_serveur: str = "a a"
             nb_tentatives: int= 0
@@ -42,35 +46,33 @@ class Client:
                 msg_serveur = self.recevoir()
                 print(msg_serveur)
 
-                # Envoi du user
-                self.envoyer(f"CONN USER {input('Votre user: ')}")
+                # Envoi du login & password
+                login: str = input('Votre login : ')
+                password: bytes = hashlib.sha256((maskpass.askpass(prompt='Votre mot de passe : ', mask='*')).encode("utf-8")).hexdigest()
+                self.envoyer(f"CONN LOGIN {login} {password}")
 
-                # Demande du password
-                msg_serveur = self.recevoir()
-                print(msg_serveur)
-
-                # Envoi du password
-                password = hashlib.sha256((maskpass.askpass(prompt='Votre mot de passe: ', mask='*')).encode("utf-8")).hexdigest()
-                self.envoyer(f"CONN PASSWORD {password}")
-
-                # Demande d'acceptation
+                # Réponse du serveur
                 msg_serveur = self.recevoir()
                 print(msg_serveur)
 
                 # Si la connexion est acceptée
                 if msg_serveur.split()[1].lower() == "accepted":
                     self.__authentification_ok = True
-
                 nb_tentatives += 1
 
     def mouvement(self, mvmt: str):
+        """Méthode de la classe Client qui permet d'envoyer au serveur les boutons activés sur la manette."""
         self.envoyer(f"MVMT {mvmt} 1")
 
     def quitter(self) -> None:
+        """Méthode de la classe Client qui permet de fermer le client.
+        """
         self.envoyer("QUIT")
         self.__socket.close()
 
     def main(self) -> None:
+        """Méthode de la classe Client qui permet de lancer l'authentification et l'envoie des contrôles.
+        """
         self.connexion()
         self.authentification()
         if self.__joystick.is_connected():
@@ -83,9 +85,19 @@ class Client:
         self.quitter()
 
     def envoyer(self, msg: str) -> None:
+        """Méthode de la classe Client qui permet d'envoyer un message au serveur.
+
+        Args:
+            msg (str): Message à envoyer au serveur
+        """
         self.__socket.send(json.dumps({"q": f"{msg}"}).encode("utf-8"))
 
     def recevoir(self) -> str:
+        """Méthode de la classe Client qui permet de recevoir le message envoyé par le serveur.
+
+        Returns:
+            str: Message reçu
+        """
         msg = self.__socket.recv(1024).decode("utf-8")
         return json.loads(msg)["q"]
 

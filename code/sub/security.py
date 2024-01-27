@@ -1,4 +1,3 @@
-from scapy.all import ARP, Ether, srp
 from typing import List
 import getmac
 """
@@ -47,8 +46,4 @@ class MacFilter:
             result = False
 
         return result
-    
-if __name__ == "__main__":
-    filter: MacFilter
-    filter = MacFilter()
-    print(filter.filter("192.168.145.45"))
+     

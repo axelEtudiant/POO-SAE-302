@@ -24,7 +24,12 @@ class Commandes:
         GPIO.setup(self.__droite_sens, GPIO.OUT)
         GPIO.setup(self.__gauche_vitesse, GPIO.OUT)
         GPIO.setup(self.__gauche_sens, GPIO.OUT)
-
+        
+        self.__moteur: dict = {"droite":[18,27],"gauche":[23,22]}
+        self.__pwm_gauche = GPIO.PWM(self.__gauche_vitesse, 100)
+        self.__pwm_droite = GPIO.PWM(self.__droite_vitesse, 100)
+        self.__pwm_gauche.start(0)
+        self.__pwm_droite.start(0)
 
     def mouvement(self, direction: str, temps: int, pourcentage: int) -> None:
         """Méthode de la classe Commandes qui permet de bouger le robot en fonction des paramètres suivants:
@@ -89,23 +94,26 @@ class Commandes:
         GPIO.output(self.__gauche_sens, GPIO.LOW)
         GPIO.output(self.__droite_sens, GPIO.LOW)
 
+    def control_joystick(self, x: float, y: float) -> None:
+        """Méthode de la classe Commandes qui permet de controler les moteurs en fonction de la position du joystick.
+
+        Args:
+            x (float): Position horizontal du joystick
+            y (float): Position vertical du joystick
+        """
+        # Conversion des valeurs x et y en vitesses pour les moteurs gauche et droite
+        left_speed = max(min((y + x) * 90, 90), -90)  # Avancer/reculer + tourner
+        right_speed = max(min((y - x) * 90, 90), -90)  # Avancer/reculer - tourner
+
+        # Définition de la direction des moteurs en fonction de la direction du joystick
+        GPIO.output(self.__moteur["gauche"][1], GPIO.HIGH if left_speed <= 0 else GPIO.LOW)
+        GPIO.output(self.__moteur["droite"][1], GPIO.HIGH if right_speed <= 0 else GPIO.LOW)
+
+        # Changement de la vitesse des moteurs avec le nouveau pourcentage de puissance
+        self.__pwm_gauche.ChangeDutyCycle(abs(left_speed))
+        self.__pwm_droite.ChangeDutyCycle(abs(right_speed))
+
     def clean(self) -> None:
         """Méthode de la classe Commandes qui permet d'arreter correctement les moteurs
         """
         GPIO.cleanup()
-"""
-commande: Commandes = Commandes()
-
-fin = True
-while fin:
-    cmd = input("Commande : ")
-    try:
-        if cmd.startswith("tourner "):
-            angle = float(cmd.split()[1])
-            commande.tourner(angle, 3, 50, 40)
-        else:
-            commande.mouvement(cmd, 3, 50, 80)
-    except Exception as e:
-        print(f"Erreur: {e}")
-        fin = False
-"""

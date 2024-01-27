@@ -23,24 +23,20 @@ class Serveur:
         self.__mac_filter: MacFilter
         self.__bdd_connexion: Requests
         self.__login: str
-        self.__password: str
         self.__addr_client: str
         self.__port_client: int
         self.__connected: bool
         self.__socket_ecoute: socket
         self.__socket_echange: socket
         self.__commandes: Commandes
-
         # Initialisation
         Thread.__init__(self)
         self.__port_serveur = port_serveur
         self.__log = Log()
         self.__mac_filter = MacFilter()
         self.__bdd_connexion = Requests("bdd/connexion.sqlite3")
-        self.__connected = False
-        self.__authentificated = False
         self.__commandes = Commandes()
-
+    
     # -- OBSERVATEUR
     def get_connected(self) -> bool:
         """Méthode de la classe Serveur qui permet de savoir si un utilisateur est connecté ou non.
@@ -110,16 +106,13 @@ class Serveur:
             self.envoyer(status_mac) # Envoie du message de confirmation
 
             self.envoyer(f"CONN WAITING USER") # Envoie la demande d'authentification
-            self.__login = self.recevoir().split()[2]
-
-            self.envoyer(f"CONN WAINTING PASSWORD")
-            self.__password = self.recevoir().split()[2]
+            self.__login = self.recevoir().split()[2:] # Récupère le login et password envoyés par le client
 
             self.__bdd_connexion.open() # Ouverture de la base de données
             liste_login = self.__bdd_connexion.reponse_multiple('SELECT login, password FROM login ;') # Requête si les identifiants correspondent
             self.__bdd_connexion.close() # Fermeture de la base de données
 
-            if (self.__login, self.__password) in liste_login: # Si les identifiants sont bien dans la base de données alors on accepte l'authentification
+            if tuple(self.__login) in liste_login: # Si les identifiants sont bien dans la base de données alors on accepte l'authentification
                 self.envoyer(f"CONN ACCEPTED LOGIN")
                 self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr_client} has log in with {self.__login} account.")
                 self.__authentificated = True
@@ -131,12 +124,13 @@ class Serveur:
             self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr_client} has tried to connect but his address is invalid.")
             self.envoyer(status_mac)
     
+    """Pour les commandes par ihm
     def mouvement(self, angle: float) -> None:
-        """Méthode de la classe Serveur qui effectue le mouvement du robot en fonction de la commande reçu.
+        Méthode de la classe Serveur qui effectue le mouvement du robot en fonction de la commande reçu.
 
         Args:
             angle (float): Angle du joystick
-        """
+        
         if angle > 180:
             angle -= 360
         if (angle < 45 and angle > -45): # Avancer
@@ -147,30 +141,40 @@ class Serveur:
             self.__commandes.mouvement("reculer", 1, 80)
         elif (angle < 135 and angle > 45): # Droite
             self.__commandes.tourner(angle, 80)
-
-       
+   """
     # - MAIN
     def main(self) -> None:
         """Méthode de la classe Serveur qui permet de lancer l'écoute sur le port ainsi que l'authentification en cas de connexion
         """
         message_client: List[str] = []
-        self.ecoute()
-        while True:
-            cpt: int = 0
-            self.attente_client()
-            while not self.get_authentificated() and cpt < 3:
-                while not self.get_connected():
-                    self.attente_client()
-                self.authentification()
-                cpt += 1
-            message_client = self.recevoir().split()
-            while message_client[0] != "QUIT":
+        try:
+            self.ecoute()
+            while True:
+                self.__connected = False
+                self.__authentificated = False
+                cpt: int = 0
+                self.attente_client()
+                while not self.get_authentificated() and cpt < 3:
+                    while not self.get_connected():
+                        self.attente_client()
+                    self.authentification()
+                    cpt += 1
                 message_client = self.recevoir().split()
-                if message_client[0] == "MVMT":
-                    while int(message_client[1]) == 1:
-                        self.mouvement(float(message_client[2]))
-                        message_client = self.recevoir().split()
+                while message_client[0] != "QUIT":
+                    message_client = self.recevoir().split()
+                    if message_client[0] == "MVMT":
+                        """
+                        Pour les commandes par ihm
 
+                        while int(message_client[1]) == 1:
+                            self.mouvement(float(message_client[2]))
+                            message_client = self.recevoir().split()
+                        """
+                        self.__commandes.control_joystick(float(message_client[2]), float(message_client[3]))
+        except KeyboardInterrupt as err:
+            print(err)
+            self.__commandes.clean()
+        
 
 if __name__ == "__main__":
     serveur: Serveur = Serveur(5001)

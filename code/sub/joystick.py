@@ -80,5 +80,5 @@ class Joystick:
             button = self.get_buttons()
             if button != "":
                 print(button)
-                self.envoyer(button, socket)                
+                self.envoyer(button, socket)
         self.envoyer("QIUT", socket)

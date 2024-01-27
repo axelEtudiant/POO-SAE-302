@@ -109,16 +109,13 @@ class Serveur:
             self.envoyer(status_mac) # Envoie du message de confirmation
 
             self.envoyer(f"CONN WAITING USER") # Envoie la demande d'authentification
-            self.__login = self.recevoir().split()[2]
-
-            self.envoyer(f"CONN WAINTING PASSWORD")
-            self.__password = self.recevoir().split()[2]
+            self.__login = self.recevoir().split()[2:]
 
             self.__bdd_connexion.open() # Ouverture de la base de données
             liste_login = self.__bdd_connexion.reponse_multiple('SELECT login, password FROM login ;') # Requête si les identifiants correspondent
             self.__bdd_connexion.close() # Fermeture de la base de données
 
-            if (self.__login, self.__password) in liste_login: # Si les identifiants sont bien dans la base de données alors on accepte l'authentification
+            if tuple(self.__login) in liste_login: # Si les identifiants sont bien dans la base de données alors on accepte l'authentification
                 self.envoyer(f"CONN ACCEPTED LOGIN")
                 self.__log.write("connexion.log", f"[{datetime.now()}] - {self.__addr_client} has log in with {self.__login} account.")
                 self.__authentificated = True
